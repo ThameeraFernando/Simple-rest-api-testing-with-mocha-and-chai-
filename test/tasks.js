@@ -63,6 +63,40 @@ describe("GET /api/tasks/:id", () => {
   });
 });
 // Test the POST Route
+describe("POST /api/tasks", () => {
+  it("It should CREATE a new task", (done) => {
+    const task = {
+      name: "Task 4",
+      completed: false,
+    };
+    chai
+      .request(server)
+      .post("/api/tasks")
+      .send(task)
+      .end((err, res) => {
+        res.should.have.status(201);
+        res.body.should.be.a("object");
+        res.body.should.have.property("id").eq(4);
+        res.body.should.have.property("name").eq("Task 4");
+        res.body.should.have.property("completed").eq(false);
+        done();
+      });
+  });
+  it("It should not CREATE a new task without the name property", (done) => {
+    const task = {
+      completed: false,
+    };
+    chai
+      .request(server)
+      .post("/api/tasks")
+      .send(task)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.text.should.be.eq("The name should be at least 3 chars long!");
+        done();
+      });
+  });
+});
 // Test the PUT Route
 // Test the PATCH Route
 // Test the DELETE Route
