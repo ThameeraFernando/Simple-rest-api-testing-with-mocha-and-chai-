@@ -98,8 +98,8 @@ describe("POST /api/tasks", () => {
   });
 });
 // Test the PUT Route
-describe("PUP /api/tasks/:id", () => {
-  it("It should REPLACE a new task", (done) => {
+describe("PUT /api/tasks/:id", () => {
+  it("It should REPLACE a existing task", (done) => {
     const taskID = 1;
     const task = {
       name: "Task one changed",
@@ -118,7 +118,7 @@ describe("PUP /api/tasks/:id", () => {
         done();
       });
   });
-  it("It should NOT REPLACE a new task", (done) => {
+  it("It should NOT REPLACE a existing task", (done) => {
     const taskID = 1;
     const task = {
       name: "Ta",
@@ -137,6 +137,40 @@ describe("PUP /api/tasks/:id", () => {
 });
 // Test the PATCH Route
 
+describe("PATCH /api/tasks/:id", () => {
+  it("It should UPDATE a existing task", (done) => {
+    const taskID = 1;
+    const task = {
+      name: "Task one changed",
+    };
+    chai
+      .request(server)
+      .patch("/api/tasks/" + taskID)
+      .send(task)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.should.have.property("id").eq(1);
+        res.body.should.have.property("name").eq("Task one changed");
+        res.body.should.have.property("completed").eq(true);
+        done();
+      });
+  });
+  it("It should NOT UPDATE a existing task", (done) => {
+    const taskID = 1;
+    const task = {
+      name: "Ta",
+    };
+    chai
+      .request(server)
+      .patch("/api/tasks/" + taskID)
+      .send(task)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.text.should.be.eq("The name should be at least 3 chars long!");
+        done();
+      });
+  });
+});
+
 // Test the DELETE Route
-
-
